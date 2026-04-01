@@ -1,80 +1,130 @@
 ---
 title: "Quickstart"
-description: "Start building awesome documentation in minutes"
+description: "Get running with Kata CLI in under 5 minutes"
 ---
 
-## Get started in three steps
+<Steps>
 
-Get your documentation site running locally and make your first customization.
+  <Step title="Run Kata CLI">
+    The fastest way to start is with `npx` — no install required:
 
-### Step 1: Set up your local environment
+    <CodeGroup>
 
-<AccordionGroup>
-  <Accordion icon="copy" title="Clone your docs locally">
-    During the onboarding process, you created a GitHub repository with your docs content if you didn't already have one. You can find a link to this repository in your [dashboard](https://dashboard.mintlify.com).
-    
-    To clone the repository locally so that you can make and preview changes to your docs, follow the [Cloning a repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) guide in the GitHub docs.
-  </Accordion>
-  <Accordion icon="rectangle-terminal" title="Start the preview server">
-    1. Install the Mintlify CLI: `npm i -g mint`
-    2. Navigate to your docs directory and run: `mint dev`
-    3. Open `http://localhost:3000` to see your docs live!
-    
-    <Tip>Your preview updates automatically as you edit files.</Tip>
-  </Accordion>
-</AccordionGroup>
+    ```bash npx
+    npx @kata-sh/cli
+    ```
 
-### Step 2: Deploy your changes
+    ```bash Global install
+    npm install -g @kata-sh/cli
+    kata-cli
+    ```
 
-<AccordionGroup>
-  <Accordion icon="github" title="Install our GitHub app">
-    Install the Mintlify GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app).
-    
-    Our GitHub app automatically deploys your changes to your docs site, so you don't need to manage deployments yourself.
-</Accordion>
-<Accordion icon="palette" title="Update your site name and colors">
-    For a first change, let's update the name and colors of your docs site.
+    ```bash With API key
+    ANTHROPIC_API_KEY=sk-ant-... npx @kata-sh/cli
+    ```
 
-    1. Open `docs.json` in your editor.
-    2. Change the `"name"` field to your project name.
-    3. Update the `"colors"` to match your brand.
-    4. Save and see your changes instantly at `http://localhost:3000`.
+    </CodeGroup>
+  </Step>
 
-    <Tip>Try changing the primary color to see an immediate difference!</Tip>
-  </Accordion>
-</AccordionGroup>
+  <Step title="Authenticate">
+    On first launch, run `/login` to authenticate with an AI provider:
 
-### Step 3: Go live
+    ```
+    /login
+    ```
 
-<Accordion icon="rocket" title="Publish your docs">
-  1. Commit and push your changes.
-  2. Your docs will update and be live in moments!
-</Accordion>
+    This opens an interactive prompt to authenticate with Anthropic, OpenAI, Google, or any supported provider. You can also pass your API key as an environment variable and skip the prompt entirely:
 
-## Next steps
+    ```bash
+    ANTHROPIC_API_KEY=sk-ant-... npx @kata-sh/cli
+    ```
+  </Step>
 
-Now that you have your docs running, explore these key features:
+  <Step title="Select a model">
+    Pick from the models available across your authenticated providers:
 
-<CardGroup cols={2}>
+    ```
+    /model
+    ```
+  </Step>
 
-<Card title="Write Content" icon="pen-to-square" href="/essentials/markdown">
-  Learn MDX syntax and start writing your documentation.
-</Card>
+  <Step title="Tell Kata what to build">
+    Describe your project in plain language. Kata reads your codebase, asks clarifying questions, and decomposes the work into a milestone with slices and tasks before executing.
+  </Step>
 
-<Card title="Customize style" icon="palette" href="/essentials/settings">
-  Make your docs match your brand perfectly.
-</Card>
+  <Step title="Choose an execution mode">
+    <Tabs>
+      <Tab title="Step mode">
+        **Step mode** (`/kata`) keeps you in the loop. Kata proposes each step and waits for your approval before continuing — recommended for new or risk-averse users.
 
-<Card title="Add code examples" icon="square-code" href="/essentials/code">
-  Include syntax-highlighted code blocks.
-</Card>
+        ```
+        /kata
+        ```
+      </Tab>
+      <Tab title="Autonomous mode">
+        **Autonomous mode** (`/kata auto`) runs end-to-end without intervention. Kata researches, plans, executes, verifies, commits, and advances through every slice until the milestone is complete.
 
-<Card title="API documentation" icon="code" href="/api-reference/introduction">
-  Auto-generate API docs from OpenAPI specs.
-</Card>
+        ```
+        /kata auto
+        ```
 
-</CardGroup>
+        For supervised autonomy, use a two-terminal **steering workflow**:
+
+        ```bash
+        # Terminal 1: autonomous execution
+        /kata auto
+
+        # Terminal 2: observe and steer
+        /kata status      # check progress
+        /kata discuss     # discuss decisions
+        /kata queue       # manage upcoming work
+
+        # When you need to interrupt and redirect:
+        # Terminal 1:
+        /kata stop
+        ```
+      </Tab>
+    </Tabs>
+  </Step>
+
+  <Step title="Review progress">
+    Check the progress dashboard at any time:
+
+    ```
+    /kata status
+    ```
+
+    This shows the active milestone, current slice and task, and what's coming up next.
+  </Step>
+
+</Steps>
+
+## How work is decomposed
+
+Kata breaks every project into three levels:
+
+```
+Milestone  →  a shippable version (4–10 slices)
+  Slice    →  one demoable vertical capability (1–7 tasks)
+    Task   →  one context-window-sized unit of work
+```
+
+Each slice flows through phases automatically:
+
+**Research** → **Plan** → **Execute** (per task) → **Complete** → **Reassess** → **Next slice**
+
+- **Research** scouts the codebase and relevant docs
+- **Plan** decomposes the slice into tasks with mechanically verifiable outcomes
+- **Execute** runs each task in a fresh context window with only the relevant files pre-loaded
+- **Complete** writes the summary, UAT script, marks the roadmap, and commits
+- **Reassess** checks whether the roadmap still makes sense given what was learned
+
+<Tip>
+  For the fastest start with an existing project, run `npx @kata-sh/cli` in your project root — Kata automatically detects your codebase and asks what you want to build.
+</Tip>
 
 <Note>
-  **Need help?** See our [full documentation](https://mintlify.com/docs) or join our [community](https://mintlify.com/community).
+  Kata stores preferences in `~/.kata-cli/preferences.md` (global) and `.kata/preferences.md` (project-local). See [CLI Preferences](/reference/cli-preferences) for all options.
 </Note>
+
+For a full list of available commands, see the [Commands reference](/cli/commands).
